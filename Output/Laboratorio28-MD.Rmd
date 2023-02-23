@@ -1,0 +1,75 @@
+---
+title: "Laboratorio 28-MD"
+author: "Leislie R. Manjarrez O."
+date: "2023-02-23"
+output: html_document
+---
+
+Laboratorio 28- Tidy data- Valores faltantes
+
+Objetivo:Introducción práctica a los datos ordenados (o tidy data) y a las herramientas que provee el paquete tidyr
+
+En este ejercicio vamos a:
+1. Cargar datos (tibbles)
+2. Llenar los valores faltantes
+
+Un valor faltante explicito es la presencia de una ausencia
+Un valor faltante implicito es la ausencua de una presencia
+
+Pre-requisitos: instalar paqueteria tidyverse
+install.packages("tidyverse")
+
+Llamar a la libreria de tidyverse
+```{r}
+library(tidyverse)
+```
+
+Cargar datos
+```{r}
+acciones <- tibble(
+  anio = c (2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  trimestre = c (1, 2, 3, 4, 2, 3, 4),
+  retorno = c (1.88, 0.59, 0.35, NA, 0.92, 0.17, 2.66))
+```
+
+Dataframe1 (DF1)
+Convertir tabla a dataframe y ver resultado
+```{r}
+DF1 = acciones
+
+head(DF1)
+```
+
+Dos valores faltantes, un trimestre (explicito) y el NA (implicito)
+
+Dataframe2 (DF2)
+Llenar los datos faltantes y ver resultado
+```{r}
+DF2 = DF1 %>%
+  spread(anio, retorno)
+
+head(DF2)
+```
+
+Dataframe3 (DF3)
+Eliminar los datos faltantes y ver resultado
+```{r}
+DF3 = acciones %>%
+  pivot_wider(names_from = anio, values_from = retorno) %>% 
+  pivot_longer(
+    cols = c("2015", "2016"),
+    names_to = "anio",
+    values_to = "retorno",
+    values_drop_na = TRUE)
+
+head(DF3)
+```
+
+Dataframe4 (DF4)
+Otra herramienta para hacer explicitos los valores faltante (conservar la estructura original) y ver resultado
+```{r}
+DF4 = DF1 %>% 
+  complete(anio,trimestre)
+
+head(DF4)
+```
